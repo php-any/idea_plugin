@@ -12,6 +12,7 @@ intellij {
 	plugins.set(listOf())
 }
 
+
 group = "com.phpany.zy"
 version = "0.1.0"
 

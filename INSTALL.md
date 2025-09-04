@@ -1,82 +1,213 @@
-了，# 安装与调试指南
+# ZY Language Support Plugin - 安装与调试指南
 
-本文档介绍如何在 GoLand/IntelliJ IDEA 中安装并调试本插件（ZY Language Support）。
+## 安装步骤
 
-> 参考 VSCode 版本功能与定位：`php-any/zy-extension`（语法高亮、基础提示、未来 LSP 接入）
+### 1. 环境准备
 
-## 安装方式
+#### 必需组件
 
-### 方式一：源码运行（推荐开发者）
+- **IntelliJ IDEA** 或 **GoLand** (2024.1+)
+- **Java 17+** 运行时
+- **zy-lsp** 语言服务器
 
-1. 安装 JDK 17。
-2. 克隆仓库并进入目录：
-   ```bash
-   git clone <your-repo-url> zy-idea-plugin
-   cd zy-idea-plugin
-   ```
-3. 启动沙箱 IDE：
-   ```bash
-   ./gradlew runIde
-   ```
-4. 在沙箱 IDE 中新建或打开 `.cjp`/`.cj`/`.zy` 文件，体验语法高亮与补全。
+#### 检查 Java 版本
 
-### 方式二：安装打包 Zip（给试用/分发）
+```bash
+java -version
+# 应该显示 Java 17 或更高版本
+```
 
-1. 本地打包：
-   ```bash
-   ./gradlew buildPlugin
-   ```
-2. 找到 `build/distributions/xxx.zip`。
-3. 打开 GoLand/IntelliJ IDEA：
-   - Settings/Preferences → Plugins → ⚙ → Install Plugin from Disk → 选择 zip → 重启 IDE。
+#### 安装 zy-lsp
 
-## 调试与开发流程
+```bash
+# 方法1：从源码编译
+git clone https://github.com/php-any/zy-lsp
+cd zy-lsp
+go build -o zy-lsp
+sudo mv zy-lsp /usr/local/bin/
 
-- 启动沙箱 IDE：`./gradlew runIde`
-- 修改源码后，直接在 Gradle 工具窗口或命令行再次执行 `runIde` 即可验证。
-- 建议在沙箱中创建样例文件验证：
-  ```
-  // test.cjp
-  函数 获取用户信息(int $id): ?User {
-      返回 this->userService->findById($id);
-  }
-  @Controller
-  @Route(prefix: "/api")
-  ```
+# 方法2：检查是否已安装
+which zy-lsp
+zy-lsp --help
+```
 
-## 常见问题排查
+### 2. 安装插件
 
-- 无法启动/构建失败：
-  - 确认 JDK 为 17。
-  - 清理缓存后重试：`./gradlew clean` 再执行 `build` 或 `runIde`。
-- 无法下载依赖：
-  - 配置代理或使用国内镜像；检查 `mavenCentral` 可达性。
-- 插件未生效：
-  - 确认文件扩展名是否为 `.cjp`、`.cj` 或 `.zy`。
-  - 在沙箱 IDE 的 Plugins 页检查插件是否已启用。
+#### 方法 1：从 ZIP 文件安装
 
-## 与 VSCode zy-extension 的对应
+1. 下载 `zy-idea-plugin-0.1.0.zip`
+2. 打开 IntelliJ IDEA/GoLand
+3. 进入 `Settings` → `Plugins`
+4. 点击齿轮图标 → `Install Plugin from Disk`
+5. 选择下载的 zip 文件
+6. 重启 IDE
 
-- 语法高亮：关键字、字符串、数字、注释（含中文关键字）
-- 基础补全：英文/中文关键字、常用注解（`@Controller`、`@Route`、`@GetMapping`、`@Inject`）
-- 文件类型：`.cjp`、`.cj`、`.zy`
-- LSP：当前保留扩展位，后续将提供与 `zy-lsp` 的 stdio/TCP 自动检测与回退策略（VSCode 版为 `zy-lsp` 优先，其次 TCP 连接 `localhost:8800`）。
+#### 方法 2：从源码构建安装
 
-## 目录结构（简要）
+```bash
+# 克隆源码
+git clone https://github.com/php-any/idea
+cd idea
+
+# 构建插件
+./gradlew buildPlugin
+
+# 安装到本地 IDE
+./gradlew runIde
+```
+
+### 3. 验证安装
+
+1. 创建测试文件 `test.cjp`：
+
+```php
+<?php
+// 测试语法高亮
+function hello($name) {
+    echo "Hello, $name!";
+    return true;
+}
+
+@Controller
+class UserController {
+    public function index() {
+        $users = [];
+        return $users;
+    }
+}
+```
+
+2. 检查功能：
+   - ✅ 语法高亮正常
+   - ✅ 代码补全可用
+   - ✅ 自动分号插入
+   - ✅ 代码折叠功能
+
+## 故障排除
+
+### 常见问题
+
+#### 1. 插件不兼容
 
 ```
-src/
-  main/
-    kotlin/com/phpany/zy/
-      lang/         # 语言、文件类型注册
-      highlight/    # 词法器与语法高亮
-      completion/   # 基础补全
-    resources/META-INF/
-      plugin.xml    # 插件清单
-      pluginIcon.svg
-build.gradle.kts
-settings.gradle.kts
-README.md
-BUILD.md
-INSTALL.md
+Plugin 'ZY Language Support' is not compatible with the current version of the IDE
 ```
+
+**解决方案**：
+
+- 检查 IDE 版本是否为 2024.1+
+- 更新插件版本或 IDE 版本
+
+#### 2. 语法高亮不工作
+
+**检查步骤**：
+
+1. 确认文件扩展名为 `.cjp`, `.cj`, `.zy`
+2. 检查插件是否正确安装
+3. 重启 IDE
+4. 查看 IDE 日志
+
+#### 3. LSP 功能不工作
+
+**检查步骤**：
+
+1. 确认 `zy-lsp` 已安装：
+   ```bash
+   which zy-lsp
+   zy-lsp --help
+   ```
+2. 检查项目是否包含 ZY 文件
+3. 查看 IDE 日志中的 LSP 错误
+
+#### 4. 编译错误
+
+```
+Unresolved reference: done
+```
+
+**解决方案**：
+
+- 更新到最新版本的插件
+- 检查 Java 版本是否为 17+
+
+### 调试模式
+
+#### 启用详细日志
+
+1. 打开 `Help` → `Diagnostic Tools` → `Debug Log Settings`
+2. 添加以下日志类别：
+   ```
+   com.phpany.zy
+   com.intellij.openapi.project
+   ```
+
+#### 查看 LSP 通信
+
+1. 打开 `Help` → `Show Log in Explorer`
+2. 查找包含 `ZY LSP` 的日志条目
+3. 检查是否有错误信息
+
+### 性能优化
+
+#### 大文件处理
+
+- 对于大型 ZY 文件，LSP 可能需要更多时间
+- 考虑将大文件拆分为多个小文件
+
+#### 内存使用
+
+- 如果遇到内存不足，增加 IDE 的堆内存：
+  - 编辑 `idea.vmoptions` 文件
+  - 增加 `-Xmx` 参数
+
+## 开发调试
+
+### 本地开发环境
+
+```bash
+# 克隆项目
+git clone https://github.com/php-any/idea
+cd idea
+
+# 设置 Java 环境
+export JAVA_HOME="/path/to/java17"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# 构建并运行
+./gradlew buildPlugin
+./gradlew runIde
+```
+
+### 调试技巧
+
+1. **热重载**：修改代码后重新构建插件
+2. **日志输出**：使用 `LOG.info()` 输出调试信息
+3. **断点调试**：在 IDE 中设置断点进行调试
+
+## 支持与反馈
+
+### 报告问题
+
+1. 查看现有 Issues
+2. 创建新的 Issue，包含：
+   - IDE 版本
+   - 插件版本
+   - 错误日志
+   - 重现步骤
+
+### 贡献代码
+
+1. Fork 项目
+2. 创建功能分支
+3. 提交 Pull Request
+
+## 更新日志
+
+### v0.1.0
+
+- ✅ 基础语法高亮
+- ✅ 代码补全功能
+- ✅ 自动分号插入
+- ✅ 代码折叠支持
+- ✅ LSP 集成框架
+- ✅ 文件图标支持

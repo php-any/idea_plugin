@@ -1,20 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <idea-plugin>
+    <!-- 插件基本信息 -->
     <id>com.phpany.zy</id>
     <name>ZY Language Support</name>
     <vendor email="" url="https://github.com/php-any">php-any</vendor>
     <version>0.1.0</version>
 
+    <!-- 插件描述 -->
     <description><![CDATA[
         为 Origami/折言 语言提供语法高亮与基础代码提示；将来可接入 LSP（zy-lsp）。
     ]]></description>
 
+    <!-- 插件依赖 -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
 
+    <!-- 扩展点注册 -->
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="ZY" language="ZY" implementationClass="com.phpany.zy.lang.ZyFileType" extensions="cjp;cj;zy"/>
+        <!-- 文件类型注册：将 .zy 文件关联到 ZY 语言 -->
+        <fileType name="ZY" language="ZY" implementationClass="com.phpany.zy.lang.ZyFileType" extensions="zy"/>
+        
+        <!-- 解析器定义：为 ZY 语言提供 PSI 解析功能 -->
+        <lang.parserDefinition language="ZY" implementationClass="com.phpany.zy.parser.ZyParserDefinition"/>
+        
+        <!-- 语法高亮器工厂：为 ZY 语言提供语法高亮功能 -->
         <lang.syntaxHighlighterFactory language="ZY" implementationClass="com.phpany.zy.highlight.ZySyntaxHighlighterFactory"/>
+        
+        <!-- 代码补全贡献者：为 ZY 语言提供智能代码补全 -->
         <completion.contributor language="ZY" implementationClass="com.phpany.zy.completion.ZyCompletionContributor"/>
+        
+        <!-- 输入处理器：实现自动分号插入等功能 -->
         <typedHandler implementation="com.phpany.zy.editor.ZySemicolonTypedHandler"/>
+        
+        <!-- 代码折叠构建器：为 ZY 语言提供代码块折叠功能 -->
+        <lang.foldingBuilder language="ZY" implementationClass="com.phpany.zy.folding.ZyFoldingBuilder"/>
+        
+        <!-- 回车键处理器：处理回车键时的缩进行为 -->
+        <enterHandlerDelegate implementation="com.phpany.zy.editor.ZyEnterHandler"/>
+
+        <!-- 跳转到定义处理器：集成 LSP 的定义跳转 -->
+        <gotoDeclarationHandler implementation="com.phpany.zy.lsp.ZyGotoDeclarationHandler"/>
+
+        <!-- 设置页：使用 Provider 以正确注入 Project -->
+        <projectConfigurable provider="com.phpany.zy.lsp.ZyLspConfigurableProvider" id="com.phpany.zy.ZY_SETING" displayName="ZY_SETING" parentId="other"/>
+        
+        <!-- 项目服务注册 -->
+        <projectService serviceImplementation="com.phpany.zy.lsp.ZyLspSettings"/>
+        <projectService serviceImplementation="com.phpany.zy.lsp.ZyLspService"/>
+        <projectService serviceImplementation="com.phpany.zy.lsp.ZyLspClient"/>
     </extensions>
+    
+    <!-- 应用监听器注册 -->
+    <applicationListeners>
+        <listener class="com.phpany.zy.lsp.ZyProjectListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </applicationListeners>
 </idea-plugin>
