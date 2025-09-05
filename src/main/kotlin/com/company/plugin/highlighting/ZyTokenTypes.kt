@@ -10,11 +10,11 @@ import com.intellij.psi.tree.IElementType
 class ZyTokenTypes {
     
     companion object {
-        val KEYWORD = IElementType("ZY_KEYWORD", ZyLanguage.INSTANCE)
-        val STRING = IElementType("ZY_STRING", ZyLanguage.INSTANCE)
-        val NUMBER = IElementType("ZY_NUMBER", ZyLanguage.INSTANCE)
-        val COMMENT = IElementType("ZY_COMMENT", ZyLanguage.INSTANCE)
-        val IDENTIFIER = IElementType("ZY_IDENTIFIER", ZyLanguage.INSTANCE)
-        val OPERATOR = IElementType("ZY_OPERATOR", ZyLanguage.INSTANCE)
+        val KEYWORD = IElementType("ZY_KEYWORD", ZyLanguage)
+        val STRING = IElementType("ZY_STRING", ZyLanguage)
+        val NUMBER = IElementType("ZY_NUMBER", ZyLanguage)
+        val COMMENT = IElementType("ZY_COMMENT", ZyLanguage)
+        val IDENTIFIER = IElementType("ZY_IDENTIFIER", ZyLanguage)
+        val OPERATOR = IElementType("ZY_OPERATOR", ZyLanguage)
     }
 }

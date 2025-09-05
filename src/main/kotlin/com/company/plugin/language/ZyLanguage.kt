@@ -7,10 +7,4 @@ import com.intellij.lang.Language
  * 基于 DIY 语言 (Origami) 的 TextMate 语法
  * 为 IntelliJ IDEA 提供 ZY 语言支持
  */
-class ZyLanguage : Language("ZY") {
-    
-    companion object {
-        // ZY 语言的单例实例
-        val INSTANCE = ZyLanguage()
-    }
-}
+object ZyLanguage : Language("ZY")

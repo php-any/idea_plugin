@@ -11,7 +11,7 @@ import javax.swing.Icon
  * 基于 TextMate 语法文件 origami.tmLanguage.json
  * 支持 .zy 文件扩展名的语法高亮和代码提示
  */
-class ZyFileType : LanguageFileType(ZyLanguage.INSTANCE) {
+class ZyFileType : LanguageFileType(ZyLanguage) {
     
     companion object {
         // ZY 文件类型的单例实例

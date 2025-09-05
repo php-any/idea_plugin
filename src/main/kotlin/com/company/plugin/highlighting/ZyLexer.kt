@@ -22,7 +22,9 @@ class ZyLexer : LexerBase() {
         this.tokenStart = startOffset
         this.tokenEnd = startOffset
         this.tokenType = null
-        advance()
+        if (startOffset < endOffset) {
+            advance()
+        }
     }
     
     override fun getState(): Int = 0
@@ -55,59 +57,67 @@ class ZyLexer : LexerBase() {
             return
         }
 
-        tokenEnd++
-
-        tokenType = when {
-            currentChar == '/' && tokenEnd < bufferEnd && buffer!![tokenEnd] == '/' -> {
-                // 单行注释 // 的处理
-                while (tokenEnd < bufferEnd && buffer!![tokenEnd] != '\n') {
-                    tokenEnd++
-                }
-                ZyTokenTypes.COMMENT
-            }
-            currentChar == '/' && tokenEnd < bufferEnd && buffer!![tokenEnd] == '*' -> {
-                // 多行注释 /* */ 的处理
-                tokenEnd++
-                while (tokenEnd < bufferEnd - 1) {
-                    if (buffer!![tokenEnd] == '*' && buffer!![tokenEnd + 1] == '/') {
-                        tokenEnd += 2
-                        break
+        // 简化的token识别逻辑，减少复杂性
+        when {
+            currentChar == '/' && tokenEnd + 1 < bufferEnd -> {
+                if (buffer!![tokenEnd + 1] == '/') {
+                    // 单行注释
+                    tokenEnd += 2
+                    while (tokenEnd < bufferEnd && buffer!![tokenEnd] != '\n') {
+                        tokenEnd++
                     }
+                    tokenType = ZyTokenTypes.COMMENT
+                } else if (buffer!![tokenEnd + 1] == '*') {
+                    // 多行注释
+                    tokenEnd += 2
+                    while (tokenEnd < bufferEnd - 1) {
+                        if (buffer!![tokenEnd] == '*' && buffer!![tokenEnd + 1] == '/') {
+                            tokenEnd += 2
+                            break
+                        }
+                        tokenEnd++
+                    }
+                    tokenType = ZyTokenTypes.COMMENT
+                } else {
                     tokenEnd++
+                    tokenType = ZyTokenTypes.OPERATOR
                 }
-                ZyTokenTypes.COMMENT
             }
             currentChar == '"' || currentChar == '\'' -> {
-                // 字符串字面量的处理（支持单引号和双引号）
+                // 字符串字面量
                 val quote = currentChar
+                tokenEnd++
                 while (tokenEnd < bufferEnd && buffer!![tokenEnd] != quote) {
                     if (buffer!![tokenEnd] == '\\' && tokenEnd + 1 < bufferEnd) {
-                        tokenEnd += 2 // 跳过转义字符（如 \n, \t, \" 等）
+                        tokenEnd += 2
                     } else {
                         tokenEnd++
                     }
                 }
                 if (tokenEnd < bufferEnd) tokenEnd++
-                ZyTokenTypes.STRING
+                tokenType = ZyTokenTypes.STRING
             }
             currentChar.isDigit() -> {
-                // 数字字面量的处理（整数和浮点数）
+                // 数字字面量
+                tokenEnd++
                 while (tokenEnd < bufferEnd && (buffer!![tokenEnd].isDigit() || buffer!![tokenEnd] == '.')) {
                     tokenEnd++
                 }
-                ZyTokenTypes.NUMBER
+                tokenType = ZyTokenTypes.NUMBER
             }
             currentChar.isLetter() || currentChar == '_' -> {
-                // 标识符或关键字的处理
+                // 标识符或关键字
+                tokenEnd++
                 while (tokenEnd < bufferEnd && (buffer!![tokenEnd].isLetterOrDigit() || buffer!![tokenEnd] == '_')) {
                     tokenEnd++
                 }
                 val text = buffer!!.subSequence(tokenStart, tokenEnd).toString()
-                if (isKeyword(text)) ZyTokenTypes.KEYWORD else ZyTokenTypes.IDENTIFIER
+                tokenType = if (isKeyword(text)) ZyTokenTypes.KEYWORD else ZyTokenTypes.IDENTIFIER
             }
             else -> {
-                // 操作符和其他符号的处理
-                ZyTokenTypes.OPERATOR
+                // 其他字符
+                tokenEnd++
+                tokenType = ZyTokenTypes.OPERATOR
             }
         }
     }
