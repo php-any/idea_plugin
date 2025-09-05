@@ -1,12 +1,50 @@
-.vscode
-.idea
-vendor
+# IDE 配置文件
+.vscode/
+.idea/
+.cursor/
+
+# 构建输出
+build/
+.gradle/
+out/
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# 依赖目录
+vendor/
+node_modules/
+
+# 系统文件
 .DS_Store
-origami
-node_modules
+Thumbs.db
+*.tmp
+*.log
+
+# 项目特定
+origami/
+zy/
+zy-lsp/
+wails/
+
+# 插件和扩展文件
 *.vsix
-zy
-zy-lsp
 *.exe
-wails
-build
+
+# 临时和缓存文件
+*.class
+*.iml
+*.ipr
+*.iws
+.attach_pid*
+
+# Gradle 用户配置
+gradlew.bat
+!gradle/wrapper/
+
+# 日志文件
+*.log
+logs/
+
+# 本地环境变量
+.env
+.env.local
