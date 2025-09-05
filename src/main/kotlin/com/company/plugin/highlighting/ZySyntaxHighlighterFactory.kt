@@ -18,7 +18,7 @@ class ZySyntaxHighlighterFactory : SyntaxHighlighterFactory() {
     }
     
     companion object {
-        // 语法高亮属性键
+        // 通用语法高亮属性键
         // 映射到默认颜色以确保即使未自定义配色也有可见高亮
         val KEYWORD = TextAttributesKey.createTextAttributesKey(
             "ZY_KEYWORD",
@@ -43,6 +43,24 @@ class ZySyntaxHighlighterFactory : SyntaxHighlighterFactory() {
         val OPERATOR = TextAttributesKey.createTextAttributesKey(
             "ZY_OPERATOR",
             DefaultLanguageHighlighterColors.OPERATION_SIGN
+        )
+        
+        // PHP 特定语法高亮属性键
+        val PHP_KEYWORD = TextAttributesKey.createTextAttributesKey(
+            "ZY_PHP_KEYWORD",
+            DefaultLanguageHighlighterColors.KEYWORD
+        )
+        val PHP_FUNCTION = TextAttributesKey.createTextAttributesKey(
+            "ZY_PHP_FUNCTION",
+            DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
+        )
+        val PHP_VARIABLE = TextAttributesKey.createTextAttributesKey(
+            "ZY_PHP_VARIABLE",
+            DefaultLanguageHighlighterColors.CONSTANT
+        )
+        val PHP_CONSTANT = TextAttributesKey.createTextAttributesKey(
+            "ZY_PHP_CONSTANT",
+            DefaultLanguageHighlighterColors.CONSTANT
         )
     }
 }
