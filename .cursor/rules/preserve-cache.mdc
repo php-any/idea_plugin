@@ -1,0 +1,121 @@
+---
+alwaysApply: true
+description: 禁止删除本地缓存，避免重复下载依赖
+---
+
+# 本地缓存保护规范
+
+## 禁止删除的缓存目录
+
+### Gradle 缓存
+
+- ❌ `~/.gradle/caches/` - Gradle 依赖缓存
+- ❌ `~/.gradle/wrapper/` - Gradle Wrapper 缓存
+- ❌ `./gradle/` - 项目 Gradle 缓存
+- ❌ `rm -rf ~/.gradle/` - 删除整个 Gradle 目录
+
+### Maven 缓存
+
+- ❌ `~/.m2/repository/` - Maven 本地仓库
+- ❌ `rm -rf ~/.m2/` - 删除整个 Maven 目录
+
+### IntelliJ IDEA 缓存
+
+- ❌ `~/.IntelliJIdea*/system/caches/` - IDEA 系统缓存
+- ❌ `~/.IntelliJIdea*/system/index/` - IDEA 索引缓存
+- ❌ `~/.IntelliJIdea*/system/compilation/` - 编译缓存
+
+## 允许的缓存清理操作
+
+### 安全的清理命令
+
+- ✅ `./gradlew clean` - 清理项目构建输出
+- ✅ `./gradlew cleanBuild` - 清理并重新构建
+- ✅ `rm -rf build/` - 清理项目构建目录
+- ✅ `rm -rf out/` - 清理输出目录
+
+### 缓存维护操作
+
+- ✅ `./gradlew --refresh-dependencies` - 刷新依赖
+- ✅ `./gradlew dependencies` - 查看依赖树
+- ✅ `./gradlew build --offline` - 离线构建
+
+## 缓存优化策略
+
+### 使用本地 IntelliJ IDEA
+
+```kotlin
+intellij {
+    // 使用本地已安装的 IntelliJ IDEA，避免下载
+    localPath.set("/Applications/IntelliJ IDEA.app/Contents")
+    plugins.set(listOf("com.intellij.java"))
+}
+```
+
+### 配置镜像加速
+
+```kotlin
+repositories {
+    // 使用国内镜像加速
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
+    maven { url = uri("https://maven.aliyun.com/repository/central") }
+    mavenCentral()
+}
+```
+
+### 离线模式配置
+
+```properties
+# gradle.properties
+org.gradle.daemon=true
+org.gradle.caching=true
+org.gradle.configureondemand=true
+```
+
+## 性能优化原则
+
+### 避免重复下载
+
+- 保持 Gradle 缓存完整
+- 使用本地 IntelliJ IDEA 安装
+- 配置国内镜像源
+- 启用 Gradle 缓存
+
+### 构建优化
+
+- 使用 `--offline` 模式
+- 启用并行构建
+- 使用增量编译
+- 避免清理全局缓存
+
+## 错误处理
+
+### 缓存问题排查
+
+- 检查缓存目录权限
+- 验证镜像源可用性
+- 确认本地 IDEA 路径正确
+- 查看 Gradle 日志
+
+### 恢复策略
+
+- 重新配置镜像源
+- 检查网络连接
+- 验证依赖版本兼容性
+- 使用备用镜像源
+
+## 最佳实践
+
+### 开发环境
+
+- 保持缓存目录完整
+- 定期备份重要缓存
+- 使用版本控制管理配置
+- 文档化缓存配置
+
+### 生产环境
+
+- 使用 Docker 缓存层
+- 配置 CI/CD 缓存策略
+- 监控缓存使用情况
+- 定期清理过期缓存

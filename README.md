@@ -1,121 +1,88 @@
 # ZY Language Support Plugin
 
-为 Origami/折言 语言提供 IntelliJ IDEA/GoLand 插件支持。
+IntelliJ IDEA 插件，为 `.zy` 文件提供语法高亮、代码提示和 LSP 集成功能。
 
 ## 功能特性
 
-### 基础功能
+- ✅ **语法高亮**: 基于 TextMate 语法文件 `origami.tmLanguage.json`
+- ✅ **代码提示**: 基于 LSP 的智能代码补全
+- ✅ **LSP 集成**: 连接到外部语言服务器
+- ✅ **文件类型支持**: 支持 `.zy` 文件扩展名
+- ✅ **错误高亮**: 语法错误和诊断信息
 
-- ✅ 语法高亮（关键字、类型、注解、变量、字符串、注释等）
-- ✅ 代码补全（PHP/Go 关键字、类型、注解）
-- ✅ 自动分号插入
-- ✅ 代码折叠（`{}` 代码块）
-- ✅ 文件图标支持（`.cjp`, `.cj`, `.zy` 文件）
+## 技术栈
 
-### LSP 集成功能
+- **开发语言**: Kotlin
+- **构建工具**: Gradle
+- **IntelliJ Platform SDK**: 2023.1+
+- **LSP 集成**: IntelliJ LSP API
+- **语言服务器**: `/Users/lvluo/Desktop/github.com/php-any/origami/bin/zy-lsp`
 
-- ✅ 自动启动本地 `zy-lsp` 服务（stdio 协议）
-- ✅ 代码跳转（Go to Definition）
-- ✅ 实时文档同步
-- ✅ 项目级语言服务
+## 项目结构
 
-## 安装要求
-
-### 必需组件
-
-1. **IntelliJ IDEA** 或 **GoLand** (2024.1+)
-2. **Java 17+** 运行时
-3. **zy-lsp** 语言服务器（需要单独安装）
-
-### 安装 zy-lsp
-
-```bash
-# 方法1：从源码编译
-git clone https://github.com/php-any/zy-lsp
-cd zy-lsp
-go build -o zy-lsp
-sudo mv zy-lsp /usr/local/bin/
-
-# 方法2：检查是否已安装
-which zy-lsp
-zy-lsp --help
+```
+src/
+├── main/
+│   ├── kotlin/
+│   │   └── com/company/plugin/
+│   │       ├── language/          # 语言相关功能
+│   │       ├── lsp/              # LSP 客户端集成
+│   │       ├── completion/       # 代码提示
+│   │       ├── navigation/       # 代码跳转
+│   │       └── highlighting/     # 语法高亮
+│   └── resources/
+│       ├── META-INF/
+│       │   └── plugin.xml        # 插件配置
+│       ├── icons/               # 图标资源
+│       └── fileTypes/           # 文件类型定义
+└── test/
+    └── kotlin/
 ```
 
-## 安装插件
+## 开发指南
 
-1. 下载 `zy-idea-plugin-0.1.0.zip`
-2. 打开 IntelliJ IDEA/GoLand
-3. 进入 `Settings` → `Plugins`
-4. 点击齿轮图标 → `Install Plugin from Disk`
-5. 选择下载的 zip 文件
-6. 重启 IDE
-
-## 使用方法
-
-### 基础使用
-
-1. 创建或打开 `.cjp`, `.cj`, `.zy` 文件
-2. 享受语法高亮和代码补全
-3. 使用 `Ctrl+Enter` 自动插入分号
-4. 点击代码块左侧的折叠图标进行代码折叠
-
-### LSP 功能
-
-1. 打开包含 ZY 文件的项目
-2. 插件会自动启动 `zy-lsp` 服务（stdio 协议）
-3. 使用 `Ctrl+Click` 或 `Ctrl+B` 跳转到定义
-4. 享受完整的语言服务支持
-
-### 故障排除
-
-- 如果 LSP 功能不工作，请检查：
-  - `zy-lsp` 是否正确安装并可在 PATH 中找到
-  - 项目是否包含 ZY 文件
-  - 查看 IDE 日志中的错误信息
-
-## 开发
-
-### 构建环境
-
-- Java 17+
-- Gradle 8.7+
-- IntelliJ Platform SDK
-
-### 构建命令
+### 构建插件
 
 ```bash
-./gradlew buildPlugin
+./gradlew build
 ```
 
-### 运行测试
+### 运行插件
 
 ```bash
 ./gradlew runIde
 ```
 
-## 技术架构
+### 打包插件
 
-### 插件组件
+```bash
+./gradlew buildPlugin
+```
 
-- **ZyLanguage**: 语言定义
-- **ZyFileType**: 文件类型注册
-- **ZyLexerAdapter**: 词法分析器
-- **ZySyntaxHighlighter**: 语法高亮器
-- **ZyCompletionContributor**: 代码补全
-- **ZySemicolonTypedHandler**: 自动分号插入
-- **ZyFoldingBuilder**: 代码折叠
-- **ZyLspClient**: LSP 客户端（stdio 协议）
-- **ZyLspService**: LSP 服务管理
+## 配置
 
-### LSP 集成
+### LSP 服务器路径
 
-插件通过以下方式与 `zy-lsp` 集成：
+默认 LSP 服务器路径: `/Users/lvluo/Desktop/github.com/php-any/origami/bin/zy-lsp`
 
-1. **自动启动**: 项目打开时自动启动 LSP 服务
-2. **stdio 通信**: 通过标准输入输出与 LSP 服务器通信
-3. **JSON-RPC**: 使用标准的 LSP 协议
-4. **异步处理**: 非阻塞的消息处理
+### 支持的文件类型
+
+- 扩展名: `.zy`
+- MIME 类型: `text/x-zy`
+- 语言: DIY 语言 (Origami)
+
+## 开发规范
+
+- 遵循 IntelliJ Platform 编码规范
+- 使用 Kotlin 作为主要开发语言
+- 基于 TextMate 语法文件实现语法高亮
+- 使用 IntelliJ LSP API 进行语言服务器集成
+- 异步处理耗时操作，避免阻塞 UI
 
 ## 许可证
 
 MIT License
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！

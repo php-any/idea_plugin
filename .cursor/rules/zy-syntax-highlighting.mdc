@@ -1,0 +1,55 @@
+---
+globs: *Zy*.kt,*zy*.kt,*Lexer*.kt,*Syntax*.kt
+description: .zy 文件语法高亮实现规范
+---
+
+# .zy 文件语法高亮实现
+
+## TextMate 语法定义
+
+- 基于 [origami.tmLanguage.json](https://github.com/php-any/zy-extension/blob/main/syntaxes/origami.tmLanguage.json) 语法文件
+- 使用 TextMate 语法规则定义 DIY 语言语法
+- 支持 TextMate Bundles 插件导入
+
+## 词法分析器 (Lexer)
+
+- 实现 ZyLexer 类继承 IntelliJ 的 LexerBase
+- 支持 .zy 文件的关键字识别
+- 处理字符串、数字、标识符、注释
+- 实现错误恢复和容错机制
+
+## 语法高亮规则
+
+- 定义 ZySyntaxHighlighter 类
+- 基于 TextMate 语法定义实现高亮规则
+- 支持关键字高亮 (根据 origami.tmLanguage.json 定义)
+- 支持字符串和数字字面量高亮
+- 实现注释高亮 (单行 // 和多行 /\* \*/)
+
+## 颜色方案
+
+- 定义 ZyColorSchemePage 配置页面
+- 支持用户自定义颜色
+- 适配 IDE 深色/浅色主题
+- 提供语法高亮预览
+
+## 文件类型注册
+
+- 实现 ZyFileType 类
+- 注册 .zy 文件扩展名
+- 提供文件图标和描述
+- 设置文件模板
+
+## 性能优化
+
+- 增量解析，只解析变更部分
+- 缓存解析结果
+- 异步解析大文件
+- 避免重复解析
+
+## 错误处理
+
+- 处理语法错误
+- 提供错误恢复机制
+- 显示语法错误标记
+- 支持错误提示和修复建议

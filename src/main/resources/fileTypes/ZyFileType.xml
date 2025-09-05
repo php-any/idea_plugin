@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileType name="ZY File" implementationClass="com.company.plugin.language.ZyFileType">
+    <description>ZY Language File</description>
+    <extensions>
+        <extension name="zy" />
+    </extensions>
+    <mimeType value="text/x-zy" />
+    <icon path="/icons/zy-file.svg" />
+</fileType>

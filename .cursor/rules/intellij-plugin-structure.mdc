@@ -1,0 +1,51 @@
+---
+alwaysApply: true
+description: IntelliJ IDEA 插件项目结构和开发规范
+---
+
+# IntelliJ IDEA DIY 语言插件开发规范
+
+## 项目概述
+
+开发一个支持 DIY 语言的 IntelliJ IDEA 插件，集成外部 LSP 服务器提供代码高亮、代码提示、代码跳转等功能。
+
+## 技术栈
+
+- **开发语言**: Kotlin (优先) 或 Java
+- **构建工具**: Gradle
+- **IntelliJ Platform SDK**: 最新稳定版本
+- **LSP 集成**: IntelliJ LSP API
+- **语言服务器**: `/Users/lvluo/Desktop/github.com/php-any/origami/bin/zy-lsp`
+
+## 项目结构规范
+
+```
+src/
+├── main/
+│   ├── kotlin/
+│   │   └── com/company/plugin/
+│   │       ├── language/          # 语言相关功能
+│   │       ├── lsp/              # LSP 客户端集成
+│   │       ├── completion/       # 代码提示
+│   │       ├── navigation/       # 代码跳转
+│   │       └── highlighting/     # 语法高亮
+│   └── resources/
+│       ├── META-INF/
+│       │   └── plugin.xml        # 插件配置
+│       ├── icons/               # 图标资源
+│       └── fileTypes/           # 文件类型定义
+└── test/
+    └── kotlin/
+```
+
+## 开发原则
+
+- 优先使用 Kotlin 而非 Java
+- 遵循 IntelliJ Platform 编码规范
+- 使用有意义的命名，避免缩写
+- 添加适当的中文 KDoc 注释
+- 遵循 SOLID 原则和 Clean Architecture
+- 异步处理耗时操作
+- 优雅处理 LSP 连接失败
+- **禁止使用临时跳过逻辑，必须完整实现所有功能**
+- **禁止删除本地缓存，避免重复下载依赖**

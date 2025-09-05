@@ -1,8 +1,8 @@
-pluginManagement {
-	repositories {
-		gradlePluginPortal()
-		mavenCentral()
-	}
-}
+rootProject.name = "zy-language-plugin"
 
-rootProject.name = "zy-idea-plugin"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}

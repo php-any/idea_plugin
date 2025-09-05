@@ -1,0 +1,55 @@
+---
+globs: *ZyLsp*.kt,*zyLsp*.kt,*Lsp*.kt
+description: .zy 文件 LSP 客户端集成规范
+---
+
+# .zy 文件 LSP 客户端集成
+
+## LSP 服务器配置
+
+- **服务器路径**: `/Users/lvluo/Desktop/github.com/php-any/origami/bin/zy-lsp`
+- **支持语言**: DIY 语言 (.zy 文件)
+- **连接方式**: 标准 LSP 协议
+- **支持功能**: 语法高亮、代码提示、错误检查
+
+## LSP 客户端实现
+
+- 实现 ZyLspClient 类
+- 使用 IntelliJ LSP API
+- 处理 LSP 连接和断开
+- 支持服务器重启和重连
+
+## 支持的功能
+
+- **textDocument/completion**: 代码补全
+- **textDocument/hover**: 悬停提示
+- **textDocument/diagnostic**: 语法错误检查
+- **textDocument/semanticTokens**: 语义高亮
+
+## 连接管理
+
+- 自动启动 LSP 服务器
+- 处理连接失败和重试
+- 支持服务器崩溃恢复
+- 提供连接状态指示
+
+## 性能优化
+
+- 异步处理 LSP 请求
+- 缓存 LSP 响应结果
+- 批量处理多个请求
+- 避免阻塞 UI 线程
+
+## 错误处理
+
+- 优雅处理 LSP 连接失败
+- 提供用户友好的错误提示
+- 记录详细的错误日志
+- 支持离线模式降级
+
+## 配置选项
+
+- 支持用户配置 LSP 服务器路径
+- 提供 LSP 功能开关
+- 支持调试模式配置
+- 提供性能监控选项

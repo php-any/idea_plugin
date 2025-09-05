@@ -1,0 +1,49 @@
+---
+globs: *.zy
+description: .zy 文件语法高亮和语法提示支持
+---
+
+# .zy 文件支持规范
+
+## 文件类型定义
+
+- **文件扩展名**: `.zy`
+- **语言类型**: DIY 语言
+- **MIME 类型**: `text/x-zy`
+- **文件图标**: 自定义 .zy 文件图标
+
+## 语法高亮功能
+
+- 基于 [origami.tmLanguage.json](https://github.com/php-any/zy-extension/blob/main/syntaxes/origami.tmLanguage.json) 实现语法高亮
+- 支持关键字、标识符、字符串、注释高亮
+- 提供代码折叠功能
+- 支持嵌套结构高亮
+- 兼容 TextMate 语法规则
+
+## 语法提示功能
+
+- 基于 LSP 的语法提示
+- 支持关键字补全
+- 提供变量和函数提示
+- 实现上下文感知的智能提示
+
+## LSP 集成
+
+- 连接 LSP 服务器: `/Users/lvluo/Desktop/github.com/php-any/origami/bin/zy-lsp`
+- 支持 .zy 文件的 LSP 功能
+- 处理 LSP 连接和通信
+- 提供错误恢复机制
+
+## 性能要求
+
+- 语法高亮响应时间 < 100ms
+- 语法提示响应时间 < 500ms
+- 支持大文件的高亮和提示
+- 异步处理避免阻塞 UI
+
+## 用户体验
+
+- 提供 .zy 文件模板
+- 支持文件关联和图标显示
+- 提供语法高亮预览
+- 支持用户自定义颜色方案

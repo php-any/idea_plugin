@@ -1,0 +1,49 @@
+---
+globs: *.tmLanguage.json,*TextMate*.kt,*textmate*.kt
+description: TextMate 语法集成和转换规范
+---
+
+# TextMate 语法集成规范
+
+## TextMate 语法文件
+
+- **语法文件**: [origami.tmLanguage.json](https://github.com/php-any/zy-extension/blob/main/syntaxes/origami.tmLanguage.json)
+- **语言类型**: DIY 语言 (Origami)
+- **文件扩展名**: `.zy`
+- **格式**: TextMate Language Grammar JSON
+
+## TextMate 语法转换
+
+- 将 TextMate 语法规则转换为 IntelliJ Platform 语法高亮
+- 实现 TextMate 到 IntelliJ 的语法映射
+- 支持 TextMate 的正则表达式和捕获组
+- 处理 TextMate 的嵌套语法规则
+
+## 语法规则映射
+
+- **关键字**: 根据 TextMate 定义的关键字列表
+- **字符串**: 支持单引号和双引号字符串
+- **注释**: 单行注释 (//) 和多行注释 (/\* \*/)
+- **数字**: 整数和浮点数字面量
+- **标识符**: 变量名和函数名
+
+## TextMate Bundles 支持
+
+- 支持 IntelliJ IDEA 的 TextMate Bundles 插件
+- 提供 TextMate 语法文件的导入功能
+- 支持用户自定义 TextMate 语法
+- 提供语法预览和测试功能
+
+## 实现方式
+
+- 使用 IntelliJ Platform 的 TextMate 支持
+- 实现自定义的 TextMate 语法解析器
+- 提供 TextMate 语法到 IntelliJ 语法的转换工具
+- 支持动态加载和更新语法规则
+
+## 性能优化
+
+- 缓存 TextMate 语法解析结果
+- 增量更新语法高亮
+- 异步处理大文件的语法解析
+- 优化正则表达式匹配性能

@@ -1,0 +1,40 @@
+---
+globs: *.kt,*Lsp*.kt,*lsp*.kt
+description: LSP 集成和语言服务器连接规范
+---
+
+# LSP 集成开发规范
+
+## LSP 服务器配置
+
+- **服务器路径**: `/Users/lvluo/Desktop/github.com/php-any/origami/bin/zy-lsp`
+- **连接方式**: 标准 LSP 协议
+- **支持功能**: 代码高亮、代码提示、代码跳转、符号搜索
+
+## LSP 客户端实现要求
+
+- 使用 IntelliJ LSP API 进行集成
+- 实现连接失败的重试机制
+- 提供用户友好的错误提示
+- 记录详细的错误日志用于调试
+- 支持 LSP 服务器的动态启动和停止
+
+## 性能要求
+
+- 插件启动时间 < 2 秒
+- 代码提示响应时间 < 500ms
+- 避免内存泄漏，合理管理资源
+- 异步处理 LSP 请求
+
+## 错误处理
+
+- 优雅处理 LSP 连接失败
+- 处理服务器崩溃和重启
+- 提供降级功能（如离线模式）
+- 记录 LSP 通信日志
+
+## 兼容性
+
+- 支持 IntelliJ IDEA 2023.1+
+- 支持其他 JetBrains IDE
+- 跨平台支持 (Windows, macOS, Linux)
