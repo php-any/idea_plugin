@@ -2,6 +2,7 @@ package com.company.plugin.highlighting
 
 import com.intellij.lexer.LexerBase
 import com.intellij.psi.tree.IElementType
+import com.intellij.psi.TokenType
 
 /**
  * ZY 词法分析器
@@ -42,19 +43,21 @@ class ZyLexer : LexerBase() {
             tokenType = null
             return
         }
-        
+
         val currentChar = buffer!![tokenEnd]
-        tokenEnd++
-        
-        tokenType = when {
-            currentChar.isWhitespace() -> {
-                // 跳过空白字符（空格、制表符、换行符等）
-                while (tokenEnd < bufferEnd && buffer!![tokenEnd].isWhitespace()) {
-                    tokenEnd++
-                }
-                advance() // 递归调用跳过空白，继续处理下一个非空白字符
-                return
+
+        // 处理空白字符为独立 token，确保 token 序列连续且不出现空洞
+        if (currentChar.isWhitespace()) {
+            while (tokenEnd < bufferEnd && buffer!![tokenEnd].isWhitespace()) {
+                tokenEnd++
             }
+            tokenType = TokenType.WHITE_SPACE
+            return
+        }
+
+        tokenEnd++
+
+        tokenType = when {
             currentChar == '/' && tokenEnd < bufferEnd && buffer!![tokenEnd] == '/' -> {
                 // 单行注释 // 的处理
                 while (tokenEnd < bufferEnd && buffer!![tokenEnd] != '\n') {

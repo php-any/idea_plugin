@@ -3,6 +3,7 @@ package com.company.plugin.language
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.util.NlsContexts
 import com.intellij.openapi.util.NlsSafe
+import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon
 
 /**
@@ -39,7 +40,10 @@ class ZyFileType : LanguageFileType(ZyLanguage.INSTANCE) {
      * 获取文件图标
      * @return 文件图标，当前为 null，将在后续添加图标
      */
-    override fun getIcon(): Icon? = null
+    override fun getIcon(): Icon? {
+        // 返回内置图标 resources/icons/zy-file.svg
+        return IconLoader.getIcon("/icons/zy-file.svg", ZyFileType::class.java)
+    }
     
     /**
      * 获取文件字符编码

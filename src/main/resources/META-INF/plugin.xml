@@ -5,13 +5,12 @@
 
     <description><![CDATA[
         ZY Language Support plugin for IntelliJ IDEA.
-        Provides syntax highlighting, code completion, and LSP integration for .zy files.
+        Provides syntax highlighting and LSP-based code completion for .zy files.
         
         Features:
-        - Syntax highlighting based on TextMate grammar
-        - Code completion via LSP integration
-        - Code navigation and symbol search
-        - Error highlighting and diagnostics
+        - Syntax highlighting for ZY language files
+        - LSP-based code completion
+        - Support for .zy file extension
     ]]></description>
 
     <change-notes><![CDATA[
@@ -19,8 +18,8 @@
         <ul>
             <li>Initial release</li>
             <li>Basic syntax highlighting for .zy files</li>
-            <li>LSP integration for code completion</li>
-            <li>TextMate grammar support</li>
+            <li>LSP-based code completion</li>
+            <li>Support for ZY language file type</li>
         </ul>
     ]]></change-notes>
 
@@ -31,7 +30,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- File type registration -->
         <fileType name="ZY File" implementationClass="com.company.plugin.language.ZyFileType" 
-                  extensions="zy;cjp;cj" 
+                  extensions="zy" 
                   language="ZY" />
         
         <!-- Syntax highlighting -->
@@ -40,8 +39,20 @@
         <!-- Code completion -->
         <completion.contributor language="ZY" implementationClass="com.company.plugin.completion.ZyCompletionContributor" />
         
-        <!-- Navigation -->
-        <chooseByNameContributor implementation="com.company.plugin.navigation.ZyNavigationProvider" />
+        <!-- Go to Declaration (Definition) -->
+        <gotoDeclarationHandler implementation="com.company.plugin.navigation.ZyGotoDeclarationHandler" />
+        
+        <!-- LSP service -->
+        <projectService serviceImplementation="com.company.plugin.lsp.ZyLspService" />
+        
+        <!-- Project startup activity -->
+        <postStartupActivity implementation="com.company.plugin.lsp.ZyProjectStartupActivity" />
+
+        <!-- Enter handler: 保持作用域内缩进 -->
+        <enterHandlerDelegate implementation="com.company.plugin.language.ZyEnterHandler" order="first"/>
+
+        <!-- Typed handler: 自动补全 (), {}, [] 配对 -->
+        <typedHandler implementation="com.company.plugin.language.ZyTypedHandler"/>
     </extensions>
 
     <actions>

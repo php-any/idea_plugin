@@ -10,6 +10,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation("org.eclipse.lsp4j:org.eclipse.lsp4j:0.21.1")
+}
+
 intellij {
     version.set("2023.3")
     type.set("IC")
@@ -17,6 +21,9 @@ intellij {
 }
 
 tasks {
+    buildSearchableOptions {
+        enabled = false
+    }
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"
@@ -28,15 +35,5 @@ tasks {
     patchPluginXml {
         sinceBuild.set("233")
         untilBuild.set("241.*")
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
     }
 }

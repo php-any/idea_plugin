@@ -3,6 +3,18 @@ package com.company.plugin.navigation
 import com.intellij.navigation.ChooseByNameContributor
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.codeInsight.navigation.actions.GotoDeclarationAction
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
+import com.company.plugin.lsp.ZyLspService
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiManager
+import com.intellij.openapi.fileEditor.OpenFileDescriptor
+import com.intellij.openapi.application.ApplicationManager
 
 /**
  * ZY 导航提供者
@@ -22,8 +34,7 @@ class ZyNavigationProvider : ChooseByNameContributor {
         project: Project,
         includeNonProjectItems: Boolean
     ): Array<NavigationItem> {
-        // 根据名称返回导航项
-        // 目前返回空数组，待完善
+        // 暂不实现符号列表检索
         return emptyArray()
     }
 }
