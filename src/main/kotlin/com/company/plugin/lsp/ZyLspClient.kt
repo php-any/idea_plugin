@@ -58,6 +58,12 @@ class ZyLspClient(private val project: Project) : LanguageClient {
      */
     fun startServer(): Boolean {
         try {
+            // 检查IDE是否已达到COMPONENTS_LOADED状态
+            if (!com.intellij.diagnostic.LoadingState.COMPONENTS_LOADED.isOccurred) {
+                LOG.warn("IDE not fully loaded (COMPONENTS_LOADED), cannot start LSP server")
+                return false
+            }
+            
             // 检查应用程序是否已完全初始化
             val app = com.intellij.openapi.application.ApplicationManager.getApplication()
             if (app == null || app.isDisposed) {
@@ -201,6 +207,13 @@ class ZyLspClient(private val project: Project) : LanguageClient {
         return future
     }
 
+    /**
+     * 检查文档是否已经在LSP中打开
+     */
+    fun isDocumentOpen(uri: String): Boolean {
+        return openedDocuments.contains(uri)
+    }
+    
     /**
      * 确保 LSP 端已打开并同步指定文档（最小实现：仅 didOpen 一次）
      */

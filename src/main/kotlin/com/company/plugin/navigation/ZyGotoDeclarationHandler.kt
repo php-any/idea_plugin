@@ -23,9 +23,6 @@ class ZyGotoDeclarationHandler : GotoDeclarationHandler {
 
     companion object {
         private val LOG = Logger.getInstance(ZyGotoDeclarationHandler::class.java)
-        // 防止重复请求的去重机制
-        private val lastRequestTime = mutableMapOf<String, Long>()
-        private val REQUEST_TIMEOUT_MS = 200L
     }
 
     override fun getGotoDeclarationTargets(element: PsiElement?, offset: Int, editor: Editor): Array<PsiElement>? {
@@ -33,16 +30,7 @@ class ZyGotoDeclarationHandler : GotoDeclarationHandler {
         val file: VirtualFile = element?.containingFile?.virtualFile ?: return null
         if (!file.name.endsWith(".zy")) return null
 
-        // 实现防止重复请求的去重机制
-        val requestKey = "${file.path}:$offset"
-        val currentTime = System.currentTimeMillis()
-        val lastTime = lastRequestTime[requestKey] ?: 0
-        
-        if (currentTime - lastTime < REQUEST_TIMEOUT_MS) {
-            LOG.debug("Skipping duplicate request for $requestKey")
-            return null
-        }
-        lastRequestTime[requestKey] = currentTime
+        // 移除所有去重机制，直接处理每次请求
 
         return try {
             LOG.debug("GotoDeclaration triggered for file=${file.path}, offset=$offset")
@@ -58,16 +46,14 @@ class ZyGotoDeclarationHandler : GotoDeclarationHandler {
             val character = offset - lineStartOffset
             val uri = file.url
             
-            // 确保文档已同步到LSP
+            // 直接同步文档，不做任何优化判断
             val text = document.text
             lspService.ensureDidOpen(uri, "zy", text)
-            
-            // 通知 LSP 文档变更（确保同步最新内容）
             lspService.notifyDocumentChange(uri, text)
 
             LOG.debug("Requesting definition for uri=$uri, line=$lineNumber, char=$character")
             val future = lspService.getDefinition(uri, lineNumber, character)
-            val result = future.get(1200, TimeUnit.MILLISECONDS)
+            val result = future.get(500, TimeUnit.MILLISECONDS) // 进一步减少超时时间
 
             val targets = mutableListOf<PsiElement>()
 
@@ -129,27 +115,21 @@ class ZyGotoDeclarationHandler : GotoDeclarationHandler {
             override fun getContainingFile(): com.intellij.psi.PsiFile? = element.containingFile
             
             override fun navigate(requestFocus: Boolean) {
-                ApplicationManager.getApplication().invokeLater {
-                    try {
-                        LOG.debug("Navigating to file=${file.path}, offset=$offset")
-                        
-                        // 直接跳转，LSP更新很快，不需要额外延迟
-                        val descriptor = OpenFileDescriptor(element.project, file, offset)
-                        if (descriptor.canNavigate()) {
-                            descriptor.navigate(requestFocus)
-                        } else {
-                            LOG.warn("Cannot navigate to ${file.path}:$offset")
-                            // 降级到基本的文件打开
-                            try {
-                                val basicDescriptor = OpenFileDescriptor(element.project, file)
-                                basicDescriptor.navigate(requestFocus)
-                            } catch (fallbackException: Exception) {
-                                LOG.error("Fallback navigation also failed", fallbackException)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        LOG.error("Failed to navigate", e)
+                try {
+                    LOG.debug("Navigating to file=${file.path}, offset=$offset")
+                    
+                    // 直接同步跳转，无任何延迟
+                    val descriptor = OpenFileDescriptor(element.project, file, offset)
+                    if (descriptor.canNavigate()) {
+                        descriptor.navigate(requestFocus)
+                    } else {
+                        LOG.warn("Cannot navigate to ${file.path}:$offset")
+                        // 降级到基本的文件打开
+                        val basicDescriptor = OpenFileDescriptor(element.project, file)
+                        basicDescriptor.navigate(requestFocus)
                     }
+                } catch (e: Exception) {
+                    LOG.error("Failed to navigate", e)
                 }
             }
             

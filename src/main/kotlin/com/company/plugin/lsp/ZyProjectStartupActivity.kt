@@ -21,28 +21,36 @@ class ZyProjectStartupActivity : ProjectActivity {
         try {
             LOG.info("ZyProjectStartupActivity executed for project: ${project.name}")
             
-            // 大幅延迟，确保IDE组件完全加载并达到COMPONENTS_LOADED状态
-            delay(3000)
-            
-            // 检查应用程序状态
+            // 检查IDE是否已完全初始化到COMPONENTS_LOADED状态
             val app = ApplicationManager.getApplication()
             if (app == null || app.isDisposed) {
-                LOG.warn("Application not fully initialized, skipping LSP startup")
+                LOG.warn("Application not ready, skipping LSP startup")
                 return
             }
+            
+            // 等待IDE完全加载
+            while (!com.intellij.diagnostic.LoadingState.COMPONENTS_LOADED.isOccurred) {
+                LOG.debug("Waiting for COMPONENTS_LOADED state...")
+                delay(100)
+            }
+            
+            // 额外延迟确保所有组件稳定
+            delay(1000)
             
             // 检查项目是否包含 .zy 文件
             if (hasZyFiles(project)) {
                 LOG.info("Found .zy files in project: ${project.name}, starting LSP service")
                 
-                // 再次延迟一下，确保所有组件都已准备好
-                delay(1000)
-                
                 // 在EDT线程中安全地启动LSP服务
                 ApplicationManager.getApplication().invokeLater {
                     try {
+                        if (project.isDisposed) {
+                            LOG.debug("Project disposed, skipping LSP startup")
+                            return@invokeLater
+                        }
+                        
                         val lspService = project.getService(ZyLspService::class.java)
-                        if (lspService != null && !project.isDisposed) {
+                        if (lspService != null) {
                             val started = lspService.startLspService()
                             if (started) {
                                 LOG.info("LSP service started successfully for project: ${project.name}")
@@ -50,7 +58,7 @@ class ZyProjectStartupActivity : ProjectActivity {
                                 LOG.warn("Failed to start LSP service for project: ${project.name}")
                             }
                         } else {
-                            LOG.error("ZyLspService not found or project disposed for project: ${project.name}")
+                            LOG.error("ZyLspService not found for project: ${project.name}")
                         }
                     } catch (e: Exception) {
                         LOG.error("Error starting LSP service for project: ${project.name}", e)

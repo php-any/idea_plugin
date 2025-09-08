@@ -19,18 +19,38 @@ class ZyDocumentSyncComponent : ProjectActivity {
     }
     
     override suspend fun execute(project: Project) {
-        // 添加全局文档监听器
-        val documentListener = object : DocumentListener {
-            override fun documentChanged(event: DocumentEvent) {
-                handleDocumentChange(project, event)
+        try {
+            // 检查IDE是否已完全初始化到COMPONENTS_LOADED状态
+            while (!com.intellij.diagnostic.LoadingState.COMPONENTS_LOADED.isOccurred) {
+                LOG.debug("Waiting for COMPONENTS_LOADED state for document sync...")
+                kotlinx.coroutines.delay(100)
             }
+            
+            // 额外延迟确保所有组件稳定
+            kotlinx.coroutines.delay(500)
+            
+            // 检查应用程序状态
+            val app = com.intellij.openapi.application.ApplicationManager.getApplication()
+            if (app == null || app.isDisposed || project.isDisposed) {
+                LOG.warn("Application or project not ready for document sync")
+                return
+            }
+            
+            // 添加全局文档监听器
+            val documentListener = object : DocumentListener {
+                override fun documentChanged(event: DocumentEvent) {
+                    handleDocumentChange(project, event)
+                }
+            }
+            
+            // 使用 EditorFactory 添加全局监听器
+            com.intellij.openapi.editor.EditorFactory.getInstance()
+                .eventMulticaster.addDocumentListener(documentListener, project)
+            
+            LOG.info("ZY document sync component initialized for project: ${project.name}")
+        } catch (e: Exception) {
+            LOG.error("Error initializing document sync component for project: ${project.name}", e)
         }
-        
-        // 使用 EditorFactory 添加全局监听器
-        com.intellij.openapi.editor.EditorFactory.getInstance()
-            .eventMulticaster.addDocumentListener(documentListener, project)
-        
-        LOG.info("ZY document sync component initialized for project: ${project.name}")
     }
     
     private fun handleDocumentChange(project: Project, event: DocumentEvent) {
