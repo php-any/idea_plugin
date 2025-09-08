@@ -133,28 +133,22 @@ class ZyGotoDeclarationHandler : GotoDeclarationHandler {
                     try {
                         LOG.debug("Navigating to file=${file.path}, offset=$offset")
                         
-                        // 安全的延迟跳转，确保编辑器完全初始化
-                        ApplicationManager.getApplication().invokeLater {
+                        // 直接跳转，LSP更新很快，不需要额外延迟
+                        val descriptor = OpenFileDescriptor(element.project, file, offset)
+                        if (descriptor.canNavigate()) {
+                            descriptor.navigate(requestFocus)
+                        } else {
+                            LOG.warn("Cannot navigate to ${file.path}:$offset")
+                            // 降级到基本的文件打开
                             try {
-                                val descriptor = OpenFileDescriptor(element.project, file, offset)
-                                if (descriptor.canNavigate()) {
-                                    descriptor.navigate(requestFocus)
-                                } else {
-                                    LOG.warn("Cannot navigate to ${file.path}:$offset")
-                                }
-                            } catch (e: Exception) {
-                                LOG.error("Failed to navigate to position after delay", e)
-                                // 降级到基本的文件打开
-                                try {
-                                    val basicDescriptor = OpenFileDescriptor(element.project, file)
-                                    basicDescriptor.navigate(requestFocus)
-                                } catch (fallbackException: Exception) {
-                                    LOG.error("Fallback navigation also failed", fallbackException)
-                                }
+                                val basicDescriptor = OpenFileDescriptor(element.project, file)
+                                basicDescriptor.navigate(requestFocus)
+                            } catch (fallbackException: Exception) {
+                                LOG.error("Fallback navigation also failed", fallbackException)
                             }
                         }
                     } catch (e: Exception) {
-                        LOG.error("Failed to schedule navigation", e)
+                        LOG.error("Failed to navigate", e)
                     }
                 }
             }

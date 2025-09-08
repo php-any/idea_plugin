@@ -1,5 +1,45 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="3" width="12" height="10" rx="1" fill="#4CAF50" stroke="#2E7D32" stroke-width="1"/>
-    <path d="M5 6h6M5 8h4M5 10h6" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round"/>
-    <text x="8" y="14" text-anchor="middle" font-family="Arial" font-size="8" fill="#2E7D32">ZY</text>
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 暗色调文件图标配色 -->
+    <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a5568" />
+      <stop offset="50%" stop-color="#2d3748" />
+      <stop offset="100%" stop-color="#1a202c" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#718096" />
+      <stop offset="100%" stop-color="#4a5568" />
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#cbd5e0" stop-opacity="0.1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- 主文档体 - 简单矩形不重叠 -->
+  <rect x="2" y="6.5" width="12" height="8" 
+        fill="url(#mainGrad)" rx="1.5" ry="1.5"/>
+  <rect x="7" y="1.5" width="7" height="6" 
+        fill="url(#mainGrad)" rx="1.5" ry="1.5"/>
+  
+  <!-- 左上角折叠 - 完全透明 -->
+  <polygon points="2,1.5 7,1.5 2,6.5" 
+           fill="none"/>
+  
+  <!-- 折叠线 -->
+  <line x1="7" y1="1.5" x2="2" y2="6.5" stroke="#9ca3af" stroke-width="0.6"/>
+  
+  <!-- 文档内容线条 - 暗色调 -->
+  <rect x="4" y="8" width="7" height="1" 
+        fill="#a0aec0" rx="0.5" ry="0.5" fill-opacity="0.7"/>
+  
+  <rect x="4" y="10" width="5" height="0.8" 
+        fill="#718096" rx="0.4" ry="0.4" fill-opacity="0.6"/>
+  
+  <rect x="4" y="11.5" width="6" height="0.8" 
+        fill="#9ca3af" rx="0.4" ry="0.4" fill-opacity="0.5"/>
+  
+  <!-- 文档边缘阴影效果 -->
+  <rect x="12.5" y="7" width="1" ry="7" 
+        fill="url(#glowGrad)"/>
 </svg>
