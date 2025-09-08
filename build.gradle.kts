@@ -15,9 +15,11 @@ dependencies {
 }
 
 intellij {
-    version.set("2023.3")
+    // 使用本地已安装的 IntelliJ IDEA，避免远程下载
+    localPath.set("/Applications/IntelliJ IDEA.app/Contents")
     type.set("IC")
     downloadSources.set(false)
+    plugins.set(listOf("com.intellij.java"))
 }
 
 tasks {

@@ -36,11 +36,16 @@
         <!-- Syntax highlighting -->
         <lang.syntaxHighlighterFactory language="ZY" implementationClass="com.company.plugin.highlighting.ZySyntaxHighlighterFactory" />
         
+        <!-- ParserDefinition: 拆分 PSI，避免整文件成为单一元素 -->
+        <lang.parserDefinition language="ZY" implementationClass="com.company.plugin.language.ZyParserDefinition"/>
+        
         <!-- Code completion -->
         <completion.contributor language="ZY" implementationClass="com.company.plugin.completion.ZyCompletionContributor" />
         
-        <!-- Go to Declaration (Definition) -->
-        <gotoDeclarationHandler implementation="com.company.plugin.navigation.ZyGotoDeclarationHandler" />
+        <!-- Custom navigation action -->
+        <action id="ZyNavigationAction" class="com.company.plugin.navigation.ZyNavigationAction" text="ZY Navigation">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl B"/>
+        </action>
         
         <!-- LSP service -->
         <projectService serviceImplementation="com.company.plugin.lsp.ZyLspService" />
@@ -56,6 +61,14 @@
 
         <!-- Typed handler: 自动补全 (), {}, [] 配对 -->
         <typedHandler implementation="com.company.plugin.language.ZyTypedHandler"/>
+        
+        <!-- Goto declaration handler for navigation -->
+        <gotoDeclarationHandler implementation="com.company.plugin.navigation.ZyGotoDeclarationHandler"/>
+
+        <!-- PSI reference contributor: 提供标识符级的精确引用范围，控制 Alt 下划线范围 -->
+        <psi.referenceContributor implementation="com.company.plugin.navigation.ZyReferenceContributor"/>
+
+        
     </extensions>
 
     <actions>
