@@ -29,6 +29,8 @@ class ZyLspClient(private val project: Project) : LanguageClient {
     private var serverCapabilities: ServerCapabilities? = null
     // 已同步到 LSP 的文档 URI 集合，用于避免重复 didOpen
     private val openedDocuments = mutableSetOf<String>()
+    // 文档版本号，用于跟踪文档变更
+    private val documentVersions = mutableMapOf<String, Int>()
     
     /**
      * 检查进程状态，确保 LSP 服务器仍在运行
@@ -47,6 +49,7 @@ class ZyLspClient(private val project: Project) : LanguageClient {
     private fun cleanupState() {
         isInitialized = false
         openedDocuments.clear()
+        documentVersions.clear()
         serverCapabilities = null
     }
     
@@ -211,12 +214,48 @@ class ZyLspClient(private val project: Project) : LanguageClient {
         }
         if (openedDocuments.contains(uri)) return
         try {
-            val item = TextDocumentItem(uri, languageId, /*version*/1, text)
+            val version = documentVersions.getOrPut(uri) { 1 }
+            val item = TextDocumentItem(uri, languageId, version, text)
             languageServer!!.textDocumentService.didOpen(DidOpenTextDocumentParams(item))
             openedDocuments.add(uri)
-            LOG.debug("didOpen sent for uri=$uri, bytes=${text.toByteArray().size}")
+            LOG.debug("didOpen sent for uri=$uri, version=$version, bytes=${text.toByteArray().size}")
         } catch (e: Exception) {
             LOG.debug("Failed to send didOpen for uri=$uri", e)
+        }
+    }
+    
+    /**
+     * 通知 LSP 服务器文档内容变更
+     */
+    fun didChange(uri: String, newText: String) {
+        if (!isInitialized || languageServer == null || !isProcessAlive()) {
+            if (!isProcessAlive()) {
+                LOG.warn("LSP process is dead, cannot send didChange")
+                cleanupState()
+            }
+            return
+        }
+        if (!openedDocuments.contains(uri)) {
+            LOG.debug("Document not opened, skipping didChange for uri=$uri")
+            return
+        }
+        
+        try {
+            val version = documentVersions.getOrPut(uri) { 1 }
+            documentVersions[uri] = version + 1
+            
+            // 使用全量变更（简单实现）
+            val changes = listOf(TextDocumentContentChangeEvent(newText))
+            
+            val params = DidChangeTextDocumentParams(
+                VersionedTextDocumentIdentifier(uri, documentVersions[uri]!!),
+                changes
+            )
+            
+            languageServer!!.textDocumentService.didChange(params)
+            LOG.debug("didChange sent for uri=$uri, version=${documentVersions[uri]}")
+        } catch (e: Exception) {
+            LOG.debug("Failed to send didChange for uri=$uri", e)
         }
     }
     

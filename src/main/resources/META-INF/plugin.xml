@@ -47,6 +47,9 @@
         
         <!-- Project startup activity -->
         <postStartupActivity implementation="com.company.plugin.lsp.ZyProjectStartupActivity" />
+        
+        <!-- Document sync activity -->
+        <postStartupActivity implementation="com.company.plugin.lsp.ZyDocumentSyncComponent" />
 
         <!-- Enter handler: 保持作用域内缩进 -->
         <enterHandlerDelegate implementation="com.company.plugin.language.ZyEnterHandler" order="first"/>

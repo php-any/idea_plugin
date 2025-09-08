@@ -92,6 +92,13 @@ class ZyLspService(private val project: Project) {
     }
     
     /**
+     * 通知文档内容变更
+     */
+    fun notifyDocumentChange(uri: String, newText: String) {
+        lspClient?.didChange(uri, newText)
+    }
+    
+    /**
      * 检查 LSP 服务是否已启动
      */
     fun isStarted(): Boolean = isStarted

@@ -61,6 +61,9 @@ class ZyGotoDeclarationHandler : GotoDeclarationHandler {
             // 确保文档已同步到LSP
             val text = document.text
             lspService.ensureDidOpen(uri, "zy", text)
+            
+            // 通知 LSP 文档变更（确保同步最新内容）
+            lspService.notifyDocumentChange(uri, text)
 
             LOG.debug("Requesting definition for uri=$uri, line=$lineNumber, char=$character")
             val future = lspService.getDefinition(uri, lineNumber, character)

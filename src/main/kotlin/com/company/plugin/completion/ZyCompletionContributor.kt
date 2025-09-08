@@ -62,6 +62,9 @@ class ZyCompletionContributor : CompletionContributor() {
                 val text = document.text
                 lspService.ensureDidOpen(uri, "zy", text)
                 
+                // 通知 LSP 文档变更（确保同步最新内容）
+                lspService.notifyDocumentChange(uri, text)
+                
                 LOG.debug("Requesting completion at ${file.name}:${lineNumber}:${character}")
                 
                 val completionFuture = lspService.getCompletion(uri, lineNumber, character)
