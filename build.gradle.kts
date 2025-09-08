@@ -20,6 +20,8 @@ intellij {
     type.set("IC")
     downloadSources.set(false)
     plugins.set(listOf("com.intellij.java"))
+    // 不自动写入 since/until 到 plugin.xml，由我们手动控制
+    updateSinceUntilBuild.set(false)
 }
 
 tasks {
@@ -35,7 +37,6 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("233")
-        untilBuild.set("241.*")
+        sinceBuild.set("241")
     }
 }
