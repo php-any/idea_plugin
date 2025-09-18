@@ -1,5 +1,5 @@
 ---
-globs: *Navigation*.kt,*GoTo*.kt,*Reference*.kt,*Symbol*.kt
+globs: *Navigation*.java,*GoTo*.java,*Reference*.java,*Symbol*.java
 description: 代码跳转和导航功能开发规范
 ---
 
@@ -20,11 +20,11 @@ description: 代码跳转和导航功能开发规范
 - 导入声明跳转
 - 重写方法跳转
 
-## LSP 集成
+## 本地实现
 
-- 使用 LSP 的跳转功能
-- 处理 LSP 跳转请求
-- 支持多文件跳转
+- 使用 IntelliJ Platform 的 PSI API
+- 实现自定义跳转处理器
+- 支持跨文件跳转
 - 提供跳转预览
 
 ## 性能优化
@@ -46,4 +46,4 @@ description: 代码跳转和导航功能开发规范
 - 处理跳转目标不存在
 - 提供跳转失败降级
 - 记录跳转性能指标
-- 优雅处理 LSP 错误
+- 优雅处理 PSI 错误

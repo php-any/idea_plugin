@@ -1,9 +1,12 @@
 ---
 globs: *ZyLsp*.kt,*zyLsp*.kt,*Lsp*.kt
 description: .zy 文件 LSP 客户端集成规范
+deprecated: true
 ---
 
 # .zy 文件 LSP 客户端集成
+
+> ⚠️ **已弃用**: 此规则已过时，项目已重构为本地 Java 实现，不再使用 LSP 客户端
 
 ## LSP 服务器配置
 

@@ -1,0 +1,12 @@
+namespace tests;
+
+class User {
+    string $name;
+
+    $age;
+
+    public function Test() {
+
+    }
+}
+

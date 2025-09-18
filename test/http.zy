@@ -1,0 +1,43 @@
+namespace app
+
+use http\Server
+
+$server = new Server(":80")
+
+$server->get("/", ($request, $response)=>{
+    $response->write("ok")
+})
+
+$group = $server->group("/v1")
+
+$group->middleware(($request, $response, $next)=>{
+    $next($request, $response)
+}
+
+$group->get("/user", ($request, $response)=>{
+    struct User {
+        int $id
+        string $name
+    }
+    $user = DB<User>()->where("id", 1)->first()
+
+    $response->json({
+        "code": 1,
+        "data": $user
+    })
+})
+
+$group->get("/list", ($request, $response)=>{
+    $response->ok({
+
+    })
+})
+
+
+$group->get("/err", ($request, $response)=>{
+    $response->fail({
+
+    })
+})
+
+$server->run()

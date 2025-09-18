@@ -5,11 +5,12 @@
 
     <description><![CDATA[
         ZY Language Support plugin for IntelliJ IDEA.
-        Provides syntax highlighting and LSP-based code completion for .zy files.
+        Provides syntax highlighting and local Java-based code completion for .zy files.
         
         Features:
         - Syntax highlighting for ZY language files
-        - LSP-based code completion
+        - Local Java-based code completion
+        - Code navigation and reference resolution
         - Support for .zy file extension
     ]]></description>
 
@@ -18,7 +19,8 @@
         <ul>
             <li>Initial release</li>
             <li>Basic syntax highlighting for .zy files</li>
-            <li>LSP-based code completion</li>
+            <li>Local Java-based code completion</li>
+            <li>Code navigation and reference resolution</li>
             <li>Support for ZY language file type</li>
         </ul>
     ]]></change-notes>
@@ -28,6 +30,11 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- 项目服务：符号索引缓存 -->
+        <projectService serviceImplementation="com.company.plugin.index.ZySymbolIndexService"/>
+
+        <!-- 启动时创建 .idea/index 目录并预热索引 -->
+        <postStartupActivity implementation="com.company.plugin.index.ZyIndexStartup"/>
         <!-- File type registration -->
         <fileType name="ZY File" implementationClass="com.company.plugin.language.ZyFileType" 
                   extensions="zy" 
@@ -47,31 +54,30 @@
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl B"/>
         </action>
         
-        <!-- LSP service -->
-        <projectService serviceImplementation="com.company.plugin.lsp.ZyLspService" />
+        <!-- Simple navigation test action -->
+        <action id="ZySimpleNavigationAction" class="com.company.plugin.navigation.ZySimpleNavigationAction" text="ZY Navigation Test">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift N"/>
+        </action>
         
-        <!-- Project startup activity -->
-        <postStartupActivity implementation="com.company.plugin.lsp.ZyProjectStartupActivity" />
-        
-        <!-- Document sync activity -->
-        <postStartupActivity implementation="com.company.plugin.lsp.ZyDocumentSyncComponent" />
+        <!-- 移除 LSP 相关扩展，使用本地 Java 实现 -->
 
-        <!-- Enter handler: 保持作用域内缩进 -->
-        <enterHandlerDelegate implementation="com.company.plugin.language.ZyEnterHandler" order="first"/>
-
-        <!-- Typed handler: 自动补全 (), {}, [] 配对 -->
-        <typedHandler implementation="com.company.plugin.language.ZyTypedHandler"/>
+        <!-- 已移除的键入与回车处理器不再保留配置 -->
         
-        <!-- Goto declaration handler for navigation -->
+        <!-- 跳转到定义处理器 -->
         <gotoDeclarationHandler implementation="com.company.plugin.navigation.ZyGotoDeclarationHandler"/>
 
-        <!-- PSI reference contributor: 提供标识符级的精确引用范围，控制 Alt 下划线范围 -->
+        <!-- PSI 引用贡献器：提供标识符级的精确引用范围，控制 Alt 下划线范围 -->
         <psi.referenceContributor implementation="com.company.plugin.navigation.ZyReferenceContributor"/>
 
         
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
+        <!-- 手动触发索引重建（主菜单与右键菜单） -->
+        <action id="ZyReindexAction" class="com.company.plugin.index.ZyReindexAction" text="ZY: Rebuild Symbol Index">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
     </actions>
 </idea-plugin>

@@ -1,45 +1,41 @@
 <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- 暗色调文件图标配色 -->
-    <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4a5568" />
-      <stop offset="50%" stop-color="#2d3748" />
-      <stop offset="100%" stop-color="#1a202c" />
+    <!-- 明亮配色渐变：纸质蜘蛛主体使用暖色系过渡 -->
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B6B" />
+      <stop offset="100%" stop-color="#FFD93D" />
     </linearGradient>
-    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#718096" />
-      <stop offset="100%" stop-color="#4a5568" />
+    <!-- 腿部颜色：清爽青绿色 -->
+    <linearGradient id="legGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2EC4B6" />
+      <stop offset="100%" stop-color="#36D6C5" />
     </linearGradient>
-    <radialGradient id="glowGrad" cx="50%" cy="50%" r="60%">
-      <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.3" />
-      <stop offset="100%" stop-color="#cbd5e0" stop-opacity="0.1" />
-    </radialGradient>
   </defs>
-  
-  <!-- 主文档体 - 简单矩形不重叠 -->
-  <rect x="2" y="6.5" width="12" height="8" 
-        fill="url(#mainGrad)" rx="1.5" ry="1.5"/>
-  <rect x="7" y="1.5" width="7" height="6" 
-        fill="url(#mainGrad)" rx="1.5" ry="1.5"/>
-  
-  <!-- 左上角折叠 - 完全透明 -->
-  <polygon points="2,1.5 7,1.5 2,6.5" 
-           fill="none"/>
-  
-  <!-- 折叠线 -->
-  <line x1="7" y1="1.5" x2="2" y2="6.5" stroke="#9ca3af" stroke-width="0.6"/>
-  
-  <!-- 文档内容线条 - 暗色调 -->
-  <rect x="4" y="8" width="7" height="1" 
-        fill="#a0aec0" rx="0.5" ry="0.5" fill-opacity="0.7"/>
-  
-  <rect x="4" y="10" width="5" height="0.8" 
-        fill="#718096" rx="0.4" ry="0.4" fill-opacity="0.6"/>
-  
-  <rect x="4" y="11.5" width="6" height="0.8" 
-        fill="#9ca3af" rx="0.4" ry="0.4" fill-opacity="0.5"/>
-  
-  <!-- 文档边缘阴影效果 -->
-  <rect x="12.5" y="7" width="1" ry="7" 
-        fill="url(#glowGrad)"/>
+
+  <!-- 纸蜘蛛（简易折纸风） -->
+  <!-- 主体：菱形，模拟折纸主体 -->
+  <polygon points="8,2.5 12.2,8 8,13.5 3.8,8" fill="url(#bodyGrad)" />
+
+  <!-- 头部：上方小三角，突出动物形态 -->
+  <polygon points="7,2.5 9,2.5 8,1.2" fill="#FFFFFF" fill-opacity="0.9" />
+
+  <!-- 折痕：内部浅色线，体现纸张折叠感 -->
+  <line x1="8" y1="2.5" x2="8" y2="13.5" stroke="#FFFFFF" stroke-opacity="0.75" stroke-width="0.6" />
+  <line x1="3.8" y1="8" x2="12.2" y2="8" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="0.5" />
+
+  <!-- 腿部：左右各四条，使用简洁线段表现 -->
+  <!-- 左侧腿 -->
+  <path d="M6.2 6.4 L3.6 4.8" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+  <path d="M6 7.6 L3.2 6.6" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+  <path d="M6 8.6 L3 9" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+  <path d="M6.2 9.6 L3.6 11.2" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+
+  <!-- 右侧腿 -->
+  <path d="M9.8 6.4 L12.4 4.8" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+  <path d="M10 7.6 L12.8 6.6" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+  <path d="M10 8.6 L13 9" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+  <path d="M9.8 9.6 L12.4 11.2" stroke="url(#legGrad)" stroke-width="1" stroke-linecap="round" />
+
+  <!-- 高光描边：让主体更醒目 -->
+  <polygon points="8,2.5 12.2,8 8,13.5 3.8,8" fill="none" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="0.5" />
 </svg>

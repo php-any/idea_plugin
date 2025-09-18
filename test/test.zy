@@ -1,0 +1,13 @@
+namespace tests;
+
+use Model\Users;
+use Logic\Users as LogicUsers;
+
+$users = new Users()
+
+$users->name()
+$users->age()
+
+new User()->name;
+
+new LogicUsers()

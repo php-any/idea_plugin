@@ -1,5 +1,5 @@
 ---
-globs: *Completion*.kt,*CompletionContributor*.kt,*CompletionProvider*.kt
+globs: *Completion*.java,*CompletionContributor*.java,*CompletionProvider*.java
 description: 代码提示和自动补全开发规范
 ---
 
@@ -7,7 +7,7 @@ description: 代码提示和自动补全开发规范
 
 ## 代码补全实现
 
-- 基于 LSP 的代码补全功能
+- 基于本地 Java 实现的代码补全功能
 - 实现自定义补全提供者
 - 支持智能提示和上下文感知
 - 提供补全项排序和过滤

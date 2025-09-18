@@ -1,9 +1,12 @@
 ---
 globs: *.kt,*Lsp*.kt,*lsp*.kt
 description: LSP 集成和语言服务器连接规范
+deprecated: true
 ---
 
 # LSP 集成开发规范
+
+> ⚠️ **已弃用**: 此规则已过时，项目已重构为本地 Java 实现，不再使用 LSP 集成
 
 ## LSP 服务器配置
 

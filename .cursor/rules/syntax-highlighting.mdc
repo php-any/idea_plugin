@@ -1,5 +1,5 @@
 ---
-globs: *Highlighting*.kt,*Syntax*.kt,*Lexer*.kt,*Parser*.kt
+globs: *Highlighting*.java,*Syntax*.java,*Lexer*.java,*Parser*.java
 description: 语法高亮和词法分析器开发规范
 ---
 

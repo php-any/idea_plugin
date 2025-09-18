@@ -1,0 +1,6 @@
+namespace tests;
+
+function hello() {
+    new User()->name();
+}
+

@@ -22,16 +22,16 @@ description: .zy 文件语法高亮和语法提示支持
 
 ## 语法提示功能
 
-- 基于 LSP 的语法提示
+- 基于本地 Java 的语法提示
 - 支持关键字补全
 - 提供变量和函数提示
 - 实现上下文感知的智能提示
 
-## LSP 集成
+## 本地实现
 
-- 连接 LSP 服务器: `/Users/lvluo/Desktop/github.com/php-any/origami/bin/zy-lsp`
-- 支持 .zy 文件的 LSP 功能
-- 处理 LSP 连接和通信
+- 使用 IntelliJ PSI 和索引 API
+- 本地解析和索引 `.zy` 文件
+- 无外部依赖，离线可用
 - 提供错误恢复机制
 
 ## 性能要求

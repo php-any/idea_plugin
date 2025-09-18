@@ -1,0 +1,11 @@
+namespace Model
+
+class Users {
+    public function name(): string {
+        return "selden"
+    }
+
+    public function age(): int {
+        return 18
+    }
+}

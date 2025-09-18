@@ -1,5 +1,5 @@
 ---
-globs: *Test*.kt,*test*.kt
+globs: *Test*.java,*test*.java
 description: 测试开发规范和最佳实践
 ---
 
@@ -9,13 +9,13 @@ description: 测试开发规范和最佳实践
 
 - 使用 IntelliJ Platform 测试框架
 - 编写单元测试和集成测试
-- 使用 MockK 进行 Kotlin 代码模拟
+- 使用 Mockito / JUnit 进行 Java 代码模拟
 - 实现端到端测试
 
 ## 测试覆盖
 
 - 为每个功能模块编写测试
-- 测试 LSP 连接和通信
+- （已移除）LSP 连接和通信相关测试
 - 测试语法高亮功能
 - 测试代码提示和跳转
 

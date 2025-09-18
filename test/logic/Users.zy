@@ -1,0 +1,8 @@
+namespace Logic
+
+class Users {
+
+    public function age(): int {
+        return 18
+    }
+}
