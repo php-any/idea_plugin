@@ -16,16 +16,15 @@ dependencies {
 }
 
 intellij {
-    // 使用本地已安装的 IntelliJ IDEA，避免远程下载
-    localPath.set("/Applications/IntelliJ IDEA.app/Contents")
-    // type.set("IC")
+    // CI 环境使用远程下载指定平台（避免依赖本机 IDEA 路径）
+    type.set("IC")
+    version.set("2024.1")
     downloadSources.set(false)
     plugins.set(listOf("com.intellij.java"))
-    // 不自动写入 since/until 到 plugin.xml，由我们手动控制
     updateSinceUntilBuild.set(false)
-    // 添加配置以解决Gradle兼容性问题
     pluginName.set("zy-language-support")
-    // version.set("2024.1.3")
+    // 支持 2024 和 2025 年版本
+    sameSinceUntilBuild.set(false)
 }
 
 tasks {
@@ -43,7 +42,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("241")
-        untilBuild.set("241.*")
+        untilBuild.set("252.*")
     }
     
     runIde {
