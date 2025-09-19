@@ -1,0 +1,7 @@
+namespace http
+
+class Server {
+    public function get(string $path, $handle) {
+        return value;
+    }
+}

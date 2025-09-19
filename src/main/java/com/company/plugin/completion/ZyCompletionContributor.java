@@ -442,6 +442,12 @@ public class ZyCompletionContributor extends CompletionContributor {
                         .withTypeText("Function Definition")
                         .withIcon(com.intellij.icons.AllIcons.Nodes.Function)
                         .withInsertHandler((context, item) -> {
+                            // 先删除已经插入的 "function" 文本
+                            int startOffset = context.getStartOffset();
+                            int endOffset = startOffset + "function".length();
+                            context.getDocument().deleteString(startOffset, endOffset);
+                            
+                            // 插入完整的函数定义代码片段
                             String snippet = "function ${1:functionName}(${2:parameters}) {\n    ${3:// function body}\n    return ${4:value};\n}";
                             insertSnippet(context, snippet);
                         })
@@ -455,6 +461,12 @@ public class ZyCompletionContributor extends CompletionContributor {
                         .withTypeText("If Statement")
                             .withIcon(com.intellij.icons.AllIcons.Nodes.Static)
                         .withInsertHandler((context, item) -> {
+                            // 先删除已经插入的 "if" 文本
+                            int startOffset = context.getStartOffset();
+                            int endOffset = startOffset + "if".length();
+                            context.getDocument().deleteString(startOffset, endOffset);
+                            
+                            // 插入完整的 if 语句代码片段
                             String snippet = "if (${1:condition}) {\n    ${2:// code}\n}";
                             insertSnippet(context, snippet);
                         })
@@ -468,6 +480,12 @@ public class ZyCompletionContributor extends CompletionContributor {
                         .withTypeText("For Loop")
                             .withIcon(com.intellij.icons.AllIcons.Nodes.Static)
                         .withInsertHandler((context, item) -> {
+                            // 先删除已经插入的 "for" 文本
+                            int startOffset = context.getStartOffset();
+                            int endOffset = startOffset + "for".length();
+                            context.getDocument().deleteString(startOffset, endOffset);
+                            
+                            // 插入完整的 for 循环代码片段
                             String snippet = "for (${1:initialization}; ${2:condition}; ${3:increment}) {\n    ${4:// code}\n}";
                             insertSnippet(context, snippet);
                         })
@@ -481,6 +499,12 @@ public class ZyCompletionContributor extends CompletionContributor {
                         .withTypeText("While Loop")
                             .withIcon(com.intellij.icons.AllIcons.Nodes.Static)
                         .withInsertHandler((context, item) -> {
+                            // 先删除已经插入的 "while" 文本
+                            int startOffset = context.getStartOffset();
+                            int endOffset = startOffset + "while".length();
+                            context.getDocument().deleteString(startOffset, endOffset);
+                            
+                            // 插入完整的 while 循环代码片段
                             String snippet = "while (${1:condition}) {\n    ${2:// code}\n}";
                             insertSnippet(context, snippet);
                         })
@@ -494,6 +518,12 @@ public class ZyCompletionContributor extends CompletionContributor {
                         .withTypeText("Class Definition")
                         .withIcon(com.intellij.icons.AllIcons.Nodes.Class)
                         .withInsertHandler((context, item) -> {
+                            // 先删除已经插入的 "class" 文本
+                            int startOffset = context.getStartOffset();
+                            int endOffset = startOffset + "class".length();
+                            context.getDocument().deleteString(startOffset, endOffset);
+                            
+                            // 插入完整的类定义代码片段
                             String snippet = "class ${1:ClassName} {\n    ${2:// class body}\n}";
                             insertSnippet(context, snippet);
                         })
@@ -505,18 +535,25 @@ public class ZyCompletionContributor extends CompletionContributor {
          * 插入代码片段
          */
         private void insertSnippet(InsertionContext context, String snippet) {
-            // 简单的代码片段实现，将 ${n} 替换为占位符
+            // 处理代码片段，将 ${n:placeholder} 替换为占位符文本
             String processedSnippet = snippet.replaceAll("\\$\\{([0-9]+):([^}]*)\\}", "$2");
+            // 移除剩余的 ${n} 占位符（没有默认值的）
             processedSnippet = processedSnippet.replaceAll("\\$\\{([0-9]+)\\}", "");
             
             // 插入文本
             context.getDocument().insertString(context.getStartOffset(), processedSnippet);
             
-            // 将光标移动到第一个占位符位置
-            int firstPlaceholder = processedSnippet.indexOf("${1");
-            if (firstPlaceholder >= 0) {
-                int offset = context.getStartOffset() + firstPlaceholder;
-                context.getEditor().getCaretModel().moveToOffset(offset);
+            // 查找第一个占位符并定位光标
+            String[] placeholders = {"functionName", "ClassName", "condition", "initialization", "parameters"};
+            for (String placeholder : placeholders) {
+                int placeholderIndex = processedSnippet.indexOf(placeholder);
+                if (placeholderIndex >= 0) {
+                    int offset = context.getStartOffset() + placeholderIndex;
+                    context.getEditor().getCaretModel().moveToOffset(offset);
+                    // 选中占位符文本，方便用户直接输入
+                    context.getEditor().getSelectionModel().setSelection(offset, offset + placeholder.length());
+                    break;
+                }
             }
         }
     }
